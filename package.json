@@ -1,0 +1,34 @@
+{
+    "name": "banco-teste",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "npx karma start"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/fabiojo7777777/banco-teste.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/fabiojo7777777/banco-teste/issues"
+    },
+    "homepage": "https://github.com/fabiojo7777777/banco-teste#readme",
+    "devDependencies": {
+        "angular-mocks": "^1.8.0",
+        "jasmine": "^3.5.0",
+        "karma": "^5.1.0",
+        "karma-chrome-launcher": "^3.1.0",
+        "karma-coverage": "^2.0.2",
+        "karma-jasmine": "^3.3.1",
+        "karma-phantomjs-launcher": "^1.0.4",
+        "phantomjs-prebuilt": "^2.1.16"
+    },
+    "dependencies": {
+        "angular": "^1.8.0",
+        "angular-i18n": "^1.7.9",
+        "angular-route": "^1.8.0"
+    }
+}
