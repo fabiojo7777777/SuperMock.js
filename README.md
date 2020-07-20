@@ -18,7 +18,7 @@ Clone o projeto e execute os seguintes comandos no terminal, na pasta do projeto
 
         Provê um factory angular que emula um backend.
 
-Exemplo de uso:
+**Exemplo de uso:**
         
         // mockar o backend inteiro usando o SuperMock
         beforeEach(module(function($provide) {
@@ -33,7 +33,7 @@ Exemplo de uso:
         segundo parâmetro: response de sucesso ao executar o serviço do backend mockado
         terceiro parâmetro: response de erro ao executar o serviço do backend mockado
 
-Exemplo de uso:
+**Exemplo de uso:**
 
         // primeira com um response de sucesso, segunda em diante com erro
         SuperMock.mockarRespostaBackend("login", { execucao: 3, data: { data: [3, 4] } });
