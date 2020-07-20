@@ -1,5 +1,5 @@
 # SuperMock.js
-Biblioteca com funções para melhorar o acesso e a legibilidade às funções do karma/jasmine em testes unitários de forma mais intuitiva.
+Biblioteca com funções para melhorar o acesso e a legibilidade às funções do karma/jasmine para teste de aplicações utilizando angularJS em testes unitários de forma mais intuitiva.
 
 # Executando o projeto
 Clone o projeto e execute os seguintes comandos no terminal, na pasta do projeto baixado:
@@ -8,6 +8,10 @@ Clone o projeto e execute os seguintes comandos no terminal, na pasta do projeto
         
         npx karma start
 
+# Instalação
+
+        importe o script SuperMock.js antes dos specs no arquivo de configuração karma.conf.js e utilize as funcionalidades.
+        
 # Funcionalidades providas
 
 **SuperMock**
