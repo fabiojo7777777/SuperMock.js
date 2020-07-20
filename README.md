@@ -14,7 +14,7 @@ Clone o projeto e execute os seguintes comandos no terminal, na pasta do projeto
 
         Variável global que provê as funcionalidades desta biblioteca
 
-**SuperMock.mockarRespostaBackend()**
+**1. SuperMock.mockarRespostaBackend()**
 
         Provê um factory angular que emula um backend.
 
@@ -25,7 +25,7 @@ Clone o projeto e execute os seguintes comandos no terminal, na pasta do projeto
                 $provide.factory("BackendService", SuperMock.mockarBackend());
         }));
 
-**SuperMock.mockarRespostaBackend()**
+**2. SuperMock.mockarRespostaBackend()**
 
         Inclui uma resposta de erro ou sucesso para execução posterior durante a execução do teste unitário
         
