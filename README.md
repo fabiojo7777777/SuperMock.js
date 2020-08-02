@@ -52,7 +52,8 @@ Clone o projeto e execute os seguintes comandos no terminal, na pasta do projeto
 
 **Obs2:** Caso especifique um response de erro e sucesso ao mesmo tempo, a execução do backend dará erro. Entretanto, se houver um then após o catch de tratamento deste erro, o response de sucesso será executado na recuperação do erro de execução.
 
-**3. SuperMock.verificarNenhumProcessoAssincronoDoAngularPendenteDeExecucao **
+
+**3. SuperMock.verificarNenhumProcessoAssincronoDoAngularPendenteDeExecucao**
 
         Verifica se não há nenhuma promise a ser executada após os testes unitários
         
@@ -63,19 +64,17 @@ Clone o projeto e execute os seguintes comandos no terminal, na pasta do projeto
         });
         
 
-**4. SuperMock.executarTodosProcessosAssincronosDoAngular **
+**4. SuperMock.executarTodosProcessosAssincronosDoAngular**
         
         Executa todos os processos assíncronos do digest do angular (ex: $timeout, $q, promises)
         
 *Exemplo de uso:*
 
-        describe("teste promise ou $timeout", function(){
-                it("teste promise ou $timeout", inject(function() {
-                        var promise = new Promise(function(resolve, reject){
-                                resolve("sucesso");
-                        });
-                        SuperMock.executarTodosProcessosAssincronosDoAngular();
-                        //
-                        expect(promise).toBeResolved();
-                }));
-        });
+        it("teste promise ou $timeout", inject(function() {
+                var promise = new Promise(function(resolve, reject){
+                        resolve("sucesso");
+                });
+                SuperMock.executarTodosProcessosAssincronosDoAngular();
+                //
+                expect(promise).toBeResolved();
+        }));
