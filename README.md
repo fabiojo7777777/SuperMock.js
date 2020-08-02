@@ -18,7 +18,7 @@ Clone o projeto e execute os seguintes comandos no terminal, na pasta do projeto
 
         Variável global que provê as funcionalidades desta biblioteca
 
-**1. SuperMock.mockarRespostaBackend()**
+**1. SuperMock.mockarBackend()**
 
         Provê um factory angular que emula um backend.
 
@@ -41,7 +41,12 @@ Clone o projeto e execute os seguintes comandos no terminal, na pasta do projeto
 
         // primeira com um response de sucesso, segunda em diante com erro
         SuperMock.mockarRespostaBackend("login", { execucao: 3, data: { data: [3, 4] } });
-        SuperMock.mockarRespostaBackend("login", null, { execucao: 3, data: { messages: ["Teste erro 2"] } });
+        SuperMock.mockarRespostaBackend("login", undefined, { execucao: 3, data: { messages: ["Teste erro 2"] } });
+
+        // primeira chamada com um response de sucesso, caso o request seja {"teste": 1} . Atenção: informar os 4 parâmetros para obter este comportamento
+        // caso request não encontrado, usa a chamada com erro
+        SuperMock.mockarRespostaBackend("login", {"teste": 1}, { execucao: 3, data: { data: [3, 4] } }, undefined);
+        SuperMock.mockarRespostaBackend("login", undefined, { execucao: 3, data: { messages: ["Teste erro 2"] } });
 
 **Obs1:** Chamadas consecutivas a este método farão com que durante as execuções de testes a este mesmo backend, tenham respostas diferentes, na sequencia em que foi mockado o backend. 
 
