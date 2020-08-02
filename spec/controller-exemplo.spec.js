@@ -18,7 +18,7 @@ describe("teste", function() {
     }));
 
     afterEach(function() {
-        verificarNenhumProcessoAssincronoDoAngularPendenteDeExecucao();
+        SuperMock.verificarNenhumProcessoAssincronoDoAngularPendenteDeExecucao();
     });
 
     it("teste de execução com todas as chamadas dando sucesso", inject(function() {
@@ -37,7 +37,7 @@ describe("teste", function() {
         ctrl.testarExecucaoBackend();
 
 		// para garantir que todas as promises e timeouts foram executados:
-		executarTodosProcessosAssincronosDoAngular();
+		SuperMock.executarTodosProcessosAssincronosDoAngular();
 		
 		expect(ctrl.retornosBackend).toEqual(
 			[
@@ -73,7 +73,7 @@ describe("teste", function() {
         ctrl.testarExecucaoBackend();
 
 		// para garantir que todas as promises e timeouts foram executados:
-		executarTodosProcessosAssincronosDoAngular();
+		SuperMock.executarTodosProcessosAssincronosDoAngular();
 
 		expect(ctrl.retornosBackend).toEqual(
 			[
@@ -106,7 +106,7 @@ describe("teste", function() {
         ctrl.testarExecucaoBackend();
 
 		// para garantir que todas as promises e timeouts foram executados:
-		executarTodosProcessosAssincronosDoAngular();
+		SuperMock.executarTodosProcessosAssincronosDoAngular();
 
 		expect(ctrl.retornosBackend).toEqual(
 			[
@@ -148,7 +148,7 @@ describe("teste", function() {
 		console.log(JSON.stringify(ctrl.retornosBackend));
 
 		// para garantir que todas as promises e timeouts foram executados:
-		executarTodosProcessosAssincronosDoAngular();
+		SuperMock.executarTodosProcessosAssincronosDoAngular();
 
 		expect(ctrl.retornosBackend).toEqual(
 			[
@@ -192,7 +192,7 @@ describe("teste", function() {
 		console.log(JSON.stringify(ctrl.retornosBackend));
 
 		// para garantir que todas as promises e timeouts foram executados:
-		executarTodosProcessosAssincronosDoAngular();
+		SuperMock.executarTodosProcessosAssincronosDoAngular();
 
 		expect(ctrl.retornosBackend).toEqual(
 			[

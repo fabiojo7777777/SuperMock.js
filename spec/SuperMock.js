@@ -2,17 +2,16 @@
 
 var SuperMock;
 var Promise;
-var executarTodosProcessosAssincronosDoAngular;
-var verificarNenhumProcessoAssincronoDoAngularPendenteDeExecucao;
 
 (function() {
     SuperMock = {
         mockarBackend: _mockarBackend,
-        mockarRespostaBackend: _mockarRespostaBackend
+        mockarRespostaBackend: _mockarRespostaBackend,
+        executarTodosProcessosAssincronosDoAngular: _flushAllPendingTasks,
+        verificarNenhumProcessoAssincronoDoAngularPendenteDeExecucao: _verifyNoPendingTasks
     };
     Promise = _Promise;
-    executarTodosProcessosAssincronosDoAngular = _flushAllPendingTasks;
-    verificarNenhumProcessoAssincronoDoAngularPendenteDeExecucao = _verifyNoPendingTasks;
+
 
     var _BACKEND;
     var _MOCKS;
