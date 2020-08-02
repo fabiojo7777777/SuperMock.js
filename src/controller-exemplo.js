@@ -12,7 +12,7 @@
 
         function testarExecucaoBackend() {
             $rootScope.messages = [];
-            BackendService.contas({})
+            BackendService.contas({"teste": 1})
                 .then(function(response) {
                     console.log("SUCESSO CONTAS 1: " + JSON.stringify(response));
                     vm.retornosBackend.push(response);
@@ -47,9 +47,9 @@
                 .catch(function(error) {
                     console.log("ERRO 1: " + JSON.stringify(error));
 					vm.retornosBackend.push(error);
-                    //$timeout(function(){
-                    $rootScope.messages.push(error.erro);
-                    //}, 1000);
+                    $timeout(function(){
+						$rootScope.messages.push(error.erro);
+                    }, 1000);
                 })
                 .then(function(response) {
                     console.log("SUCESSO CONTAS 6: " + JSON.stringify(response));
@@ -64,11 +64,13 @@
                 .catch(function(error) {
                     console.log("ERRO 2: " + JSON.stringify(error));
 					vm.retornosBackend.push(error);
-                    //$timeout(function(){
-                    $rootScope.messages.push(error.erro);
-                    //}, 1000);
-                });
-            BackendService.login({})
+                    $timeout(function(){
+						$rootScope.messages.push(error.erro);
+                    }, 1000);
+                })
+				.then(function(response){
+					return BackendService.login({});
+				})
                 .then(function(response) {
                     console.log("SUCESSO LOGIN 3: " + JSON.stringify(response));
                     vm.retornosBackend.push(response);
@@ -76,11 +78,13 @@
                 .catch(function(error) {
                     console.log("ERRO LOGIN 3: " + JSON.stringify(error));
 					vm.retornosBackend.push(error);
-                    //$timeout(function(){
-                    $rootScope.messages.push(error.erro);
-                    //}, 1000);
-                });
-            BackendService.login({})
+                    $timeout(function(){
+						$rootScope.messages.push(error.erro);
+                    }, 1000);
+                })
+				.then(function(response) {
+					return BackendService.login({});						
+				})            
                 .then(function(response) {
                     console.log("SUCESSO LOGIN 4: " + JSON.stringify(response));
                     vm.retornosBackend.push(response);
@@ -88,11 +92,13 @@
                 .catch(function(error) {
                     console.log("ERRO LOGIN 4: " + JSON.stringify(error));
 					vm.retornosBackend.push(error);
-                    //$timeout(function(){
-                    $rootScope.messages.push(error.erro);
-                    //}, 1000);
-                });
-            BackendService.acessos({})
+                    $timeout(function(){
+						$rootScope.messages.push(error.erro);
+                    }, 1000);
+                })
+				.then(function(response){
+					return BackendService.acessos({});
+				})
                 .then(function(response) {
                     console.log("SUCESSO ACESSOS 1: " + JSON.stringify(response));
                     vm.retornosBackend.push(response);
@@ -100,9 +106,9 @@
                 .catch(function(error) {
                     console.log("ERRO ACESSOS 1: " + JSON.stringify(error));
 					vm.retornosBackend.push(error);
-                    //$timeout(function(){
-                    $rootScope.messages.push(error.erro);
-                    //}, 1000);
+                    $timeout(function(){
+						$rootScope.messages.push(error.erro);
+                    }, 1000);
                 });
         }
 

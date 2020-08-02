@@ -1,146 +1,173 @@
 'use strict'
 
-var SuperMock = {};
+var SuperMock;
+var Promise;
+var executarTodosProcessosAssincronosDoAngular;
+var verificarNenhumProcessoAssincronoDoAngularPendenteDeExecucao;
 
 (function() {
+    SuperMock = {
+        mockarBackend: _mockarBackend,
+        mockarRespostaBackend: _mockarRespostaBackend
+    };
+    Promise = _Promise;
+    executarTodosProcessosAssincronosDoAngular = _flushAllPendingTasks;
+    verificarNenhumProcessoAssincronoDoAngularPendenteDeExecucao = _verifyNoPendingTasks;
 
-    SuperMock.mockarBackend = mockarBackend;
-    SuperMock.mockarRespostaBackend = mockarRespostaBackend;
+    var _BACKEND;
+    var _MOCKS;
 
-    var MOCKS = {};
-    var BACKEND = {};
-    var EXECUTANDO_BACKEND = false;
-
-    function mockarBackend() {
-        inicializarBackend();
+    function _mockarBackend() {
+        _BACKEND = {};
+        _MOCKS = {};
         return function() {
-            return BACKEND;
+            return _BACKEND;
         };
     }
 
-    function inicializarBackend() {
-        if (EXECUTANDO_BACKEND) {
-            for (var prop in BACKEND) {
-                delete BACKEND[prop];
-            }
-            for (var prop in MOCKS) {
-                delete MOCKS[prop];
-            }
-            EXECUTANDO_BACKEND = false;
+    function _mockarRespostaBackend(prop, p1, p2, p3) {
+        var request = undefined;
+        var responseSucesso = undefined;
+        var responseErro = undefined;
+        if (arguments.length <= 1) {
+            throw Error("Informe no mínimo o nome do backend e a resposta de sucesso");
+        } else if (arguments.length == 2) {
+            responseSucesso = arguments[1];
+        } else if (arguments.length == 3) {
+            responseSucesso = arguments[1];
+            responseErro = arguments[2];
+        } else if (arguments.length >= 4) {
+            request = arguments[1];
+            responseSucesso = arguments[2];
+            responseErro = arguments[3];
         }
+        _mockarRespostaBackend2(prop, request, responseSucesso, responseErro);
     }
 
-    function mockarRespostaBackend(prop, sucessoBackend, erroBackend) {
-        obterOuCriarNovoMock(prop);
-        if (sucessoBackend) {
-            mockarSucessoBackend(prop, sucessoBackend);
+    function _mockarRespostaBackend2(prop, request, responseSucesso, responseErro) {
+        var mock = _obterOuCriarNovoMock(prop, request);
+        if (typeof responseSucesso !== "undefined") {
+            mock.responseSucesso.push(responseSucesso);
         } else {
-            mockarSucessoBackend(prop, null);
+            mock.responseSucesso.push(undefined);
         }
-        if (erroBackend) {
-            mockarErroBackend(prop, erroBackend);
+        if (typeof responseErro !== "undefined") {
+            mock.responseErro.push(responseErro);
         } else {
-            mockarErroBackend(prop, null);
+            mock.responseErro.push(undefined);
         }
-        mockarServico(prop);
+        _mockarServico(prop);
     }
 
-    function mockarSucessoBackend(prop, sucessoBackend) {
-        obterOuCriarNovoMock(prop);
-        MOCKS[prop].responseSucesso.push(sucessoBackend);
-        mockarServico(prop);
+    function _obterOuCriarNovoMock(prop, request) {
+        _criarMockSeNecessario(prop);
+
+        var key = JSON.stringify(request);
+
+        if (!_MOCKS[prop][key]) {
+            _MOCKS[prop][key] = {
+                indiceExecucao: -1,
+                responseSucesso: [],
+                responseErro: []
+            };
+        } else {
+            _MOCKS[prop][key].indiceExecucao = -1;
+        }
+
+        return _MOCKS[prop][key];
     }
 
-    function mockarErroBackend(prop, erroBackend) {
-        obterOuCriarNovoMock(prop);
-        MOCKS[prop].responseErro.push(erroBackend);
-        mockarServico(prop);
+    function _obterMockDoRequestOuMockDefault(prop, request) {
+        _criarMockSeNecessario(prop);
+
+        var key = JSON.stringify(request);
+
+        if (key in _MOCKS[prop]) {
+            return _MOCKS[prop][key];
+        } else {
+            // obs: "undefined" é a chave de pesquisa do mock default
+            return _MOCKS[prop]["undefined"];
+        }
     }
 
-    function mockarServico(prop) {
-        obterOuCriarNovoMock(prop);
-        if (!BACKEND[prop]) {
-            BACKEND[prop] = function(request) {
-                EXECUTANDO_BACKEND = true;
-                equalizarTamanhoResponseSucessoEErro(prop);
-                MOCKS[prop].indiceExecucao++;
-                if (MOCKS[prop].indiceExecucao >= MOCKS[prop].responseSucesso.length) {
-                    MOCKS[prop].indiceExecucao = MOCKS[prop].responseSucesso.length - 1;
+    function _criarMockSeNecessario(prop) {
+        if (!_MOCKS[prop]) {
+            // obs: "undefined" é a chave de pesquisa do mock default
+            _MOCKS[prop] = {
+                "undefined": {
+                    indiceExecucao: -1,
+                    responseSucesso: [],
+                    responseErro: []
                 }
-                return getPromise(prop, MOCKS[prop].indiceExecucao);
             };
         }
     }
 
-    function obterOuCriarNovoMock(prop) {
-        if (!MOCKS[prop]) {
-            MOCKS[prop] = criarMock();
-        } else {
-            MOCKS[prop].indiceExecucao = -1;
-            MOCKS[prop].erroThen = [];
-        }
-        return MOCKS[prop];
-    }
-
-    function criarMock() {
-        return {
-            indiceExecucao: -1,
-            erroThen: [],
-            request: [],
-            responseSucesso: [],
-            responseErro: []
-        };
-    }
-
-    function equalizarTamanhoResponseSucessoEErro(prop) {
-        // deixar o array de response sucesso com o mesmo tamanho do array de erros
-        while (MOCKS[prop].responseSucesso.length < MOCKS[prop].responseErro.length) {
-            MOCKS[prop].responseSucesso.push(MOCKS[prop].responseSucesso[MOCKS[prop].responseSucesso.length - 1]);
-        }
-        while (MOCKS[prop].responseErro.length < MOCKS[prop].responseSucesso.length) {
-            MOCKS[prop].responseErro.push(MOCKS[prop].responseErro[MOCKS[prop].responseErro.length - 1]);
-        }
-    }
-
-    function getPromise(prop, indiceExecucao) {
-        var promise = {
-            then: function(callbackSucesso) {
-                var retornoPromiseThen = undefined;
-                if (!MOCKS[prop].erroThen[indiceExecucao]) {
-                    if (!MOCKS[prop].responseErro[indiceExecucao]
-					|| promise.catchTratado) {
-                        try {
-                            retornoPromiseThen = callbackSucesso(MOCKS[prop].responseSucesso[indiceExecucao]);
-                        } catch (e) {
-                            MOCKS[prop].erroThen[indiceExecucao] = e;
-                        }
-                    }
+    function _mockarServico(prop) {
+        if (!_BACKEND[prop]) {
+            _BACKEND[prop] = function(request) {
+                var mock = _obterMockDoRequestOuMockDefault(prop, request);
+                mock.indiceExecucao++;
+                if (mock.indiceExecucao >= mock.responseSucesso.length) {
+                    mock.indiceExecucao = mock.responseSucesso.length - 1;
                 }
-                if (isPromise(retornoPromiseThen)) {
-                    return retornoPromiseThen;
+
+                var indiceExecucao = mock.indiceExecucao;
+                var responseSucesso = mock.responseSucesso[indiceExecucao];
+                var responseErro = mock.responseErro[indiceExecucao];
+
+                var deferred = _obterDeferred();
+
+                if (responseErro) {
+                    deferred.reject(responseErro);
                 } else {
-                    return promise;
+                    deferred.resolve(responseSucesso);
                 }
-            },
-            catch: function(callbackErro) {
-                if (MOCKS[prop].erroThen[indiceExecucao]) {
-                    var erroThen = MOCKS[prop].erroThen[indiceExecucao];
-                    MOCKS[prop].erroThen[indiceExecucao] = undefined;
-                    callbackErro(erroThen.toString());
-                } else if (MOCKS[prop].responseErro[indiceExecucao]
-						&& !promise.catchTratado) {
-                    callbackErro(MOCKS[prop].responseErro[indiceExecucao]);
-                }
-				promise.catchTratado = true;
-                return promise;
-            },
-			catchTratado: false
-        };
-        return promise;
+
+                return deferred.promise;
+            };
+        }
     }
 
-    function isPromise(obj) {
-        return obj && typeof obj.then === "function" && typeof obj.catch === "function";
+    function _obterDeferred() {
+        var deferred;
+        inject(function($q) {
+            deferred = $q.defer();
+        });
+        return deferred;
+    }
+
+    function _Promise(callback) {
+        var deferred;
+        inject(function($q) {
+            deferred = $q.defer();
+        });
+        callback(deferred.resolve, deferred.reject);
+        return deferred.promise;
+    }
+
+    function _flushAllPendingTasks() {
+        inject(function($flushPendingTasks) {
+            for (var i = 0; i < 1000; i++) {
+                try {
+                    $flushPendingTasks();
+                } catch (e) {
+                    //ignore
+                    //console.log("flush de tarefas executado " + i + " vezes.");
+                    return;
+                }
+            }
+        });
+    }
+
+    function _verifyNoPendingTasks() {
+        inject(function($verifyNoPendingTasks) {
+            try {
+                $verifyNoPendingTasks();
+            } catch (e) {
+                throw Error("*** Nem todas as promises / timeouts / processos assíncronos foram executados. Execute a função executarTodosProcessosAssincronosDoAngular() para executar estes processos ***");
+            }
+        });
     }
 
 })();
