@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var SuperMock;
 var Promise;
@@ -164,7 +164,7 @@ var Promise;
             try {
                 $verifyNoPendingTasks();
             } catch (e) {
-                throw Error("*** Nem todas as promises / timeouts / processos assíncronos foram executados. Execute a função executarTodosProcessosAssincronosDoAngular() para executar estes processos ***");
+                throw Error("*** Nem todas as promises / timeouts / processos assíncronos foram executados. Execute a função SuperMock.executarTodosProcessosAssincronosDoAngular() para executar estes processos ***");
             }
         });
     }
