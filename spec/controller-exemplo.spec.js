@@ -213,4 +213,14 @@ describe("teste", function() {
 
     }));
 
+    it("teste evento $broadcast", inject(function($rootScope, _$scope_) {
+
+        ctrl.onInit();
+        _$scope_.$parent.$broadcast("eventoGenerico", "dadoEventoGenerico");
+
+        // para garantir que todas as promises e timeouts foram executados:
+        SuperMock.executarTodosProcessosAssincronosDoAngular();
+        expect(ctrl.eventoGenerico).toEqual("dadoEventoGenerico");
+    }));
+
 });
