@@ -8,7 +8,7 @@ describe("teste", function() {
     beforeEach(module("controller-exemplos"));
 
     // mockar o backend inteiro usando o SuperMock
-    beforeEach(module(function($provide, $rootScopeProvider) {
+    beforeEach(module(function($provide) {
         // mock do BackendService
         $provide.factory("BackendService", SuperMock.mockarBackend());
         // mock do $scope
@@ -213,7 +213,7 @@ describe("teste", function() {
 
     }));
 
-    it("teste evento $broadcast", inject(function($rootScope, _$scope_) {
+    it("teste evento $broadcast", inject(function(_$scope_) {
 
         ctrl.onInit();
         _$scope_.$parent.$broadcast("eventoGenerico", "dadoEventoGenerico");
