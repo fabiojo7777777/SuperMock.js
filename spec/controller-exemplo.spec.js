@@ -12,7 +12,7 @@ describe("teste", function() {
         // mock do BackendService
         $provide.factory("BackendService", SuperMock.mockarBackend());
         // mock do $scope
-        $provide.factory("$scope", function() { return $rootScopeProvider.$get().$new(); });
+        $provide.factory("$scope", SuperMock.mockar$Scope(function() { return ctrl; }));
     }));
 
     // criar controller
