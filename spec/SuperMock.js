@@ -7,8 +7,9 @@ var Promise;
     SuperMock = {
         mockarBackend: _mockarBackend,
         mockarRespostaBackend: _mockarRespostaBackend,
-        executarTodosProcessosAssincronosDoAngular: _flushAllPendingTasks,
-        verificarNenhumProcessoAssincronoDoAngularPendenteDeExecucao: _verifyNoPendingTasks
+        executarTodosProcessosAssincronosDoAngular: executarTodosProcessosAssincronosDoAngular,
+        verificarNenhumProcessoAssincronoDoAngularPendenteDeExecucao: _verificarNenhumProcessoAssincronoDoAngularPendenteDeExecucao,
+        mockar$Scope: _mockar$Scope
     };
     Promise = _Promise;
 
@@ -137,15 +138,12 @@ var Promise;
     }
 
     function _Promise(callback) {
-        var deferred;
-        inject(function($q) {
-            deferred = $q.defer();
-        });
+        var deferred = _obterDeferred();
         callback(deferred.resolve, deferred.reject);
         return deferred.promise;
     }
 
-    function _flushAllPendingTasks() {
+    function executarTodosProcessosAssincronosDoAngular() {
         inject(function($flushPendingTasks) {
             for (var i = 0; i < 1000; i++) {
                 try {
@@ -159,7 +157,7 @@ var Promise;
         });
     }
 
-    function _verifyNoPendingTasks() {
+    function _verificarNenhumProcessoAssincronoDoAngularPendenteDeExecucao() {
         inject(function($verifyNoPendingTasks) {
             try {
                 $verifyNoPendingTasks();
@@ -167,6 +165,35 @@ var Promise;
                 throw Error("*** Nem todas as promises / timeouts / processos assíncronos foram executados. Execute a função SuperMock.executarTodosProcessosAssincronosDoAngular() para executar estes processos ***");
             }
         });
+    }
+
+    function _mockar$Scope(getControllerFunction) {
+        if (typeof getControllerFunction !== "function") {
+            throw new Error("Chame a função SuperMock.mockar$Scope enviando uma função que retorne a variável que tem o controller a ser testado");
+        }
+        var scope;
+        module(function($rootScopeProvider) {
+            scope = $rootScopeProvider.$get().$new();
+        });
+        for (var property in scope) {
+            (function(p) {
+                var oldPropertyValue = scope[p];
+                Object.defineProperty(scope, p, {
+                    get: function() {
+                        if (!getControllerFunction()) {
+                            throw Error("Você deve acessar o $scope." + p + " a partir de uma function do controller que está associada ao ng-init do html ao invés de fazer este acesso durante a construção do controller (para o controller ser testável)");
+                        }
+                        return oldPropertyValue;
+                    },
+                    set: function(valor) {
+                        oldPropertyValue = valor;
+                    }
+                });
+            })(property);
+        }
+        return function() {
+            return scope;
+        };
     }
 
 })();
