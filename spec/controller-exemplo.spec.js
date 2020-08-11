@@ -1,6 +1,6 @@
 describe("teste", function() {
 
-    'use strict'
+    'use strict';
 
     var ctrl;
 
@@ -33,9 +33,9 @@ describe("teste", function() {
         // Obs 1: chamando o método várias vezes para uma mesma transação 
         // fará com que as respostas consecutivas sejam acumuladas para serem chamadas 
         // na sequência de execução
-        SuperMock.mockarRespostaBackend("contas", { execucao: 1, data: { data: [1, 2] } });
-        SuperMock.mockarRespostaBackend("login", { execucao: 1, data: { data: [3, 4] } });
-        SuperMock.mockarRespostaBackend("acessos", { execucao: 1, data: { data: [5, 6] } });
+        SuperMock.mockarRespostaBackend("contas", Api.contas_SUCESSO_1_2);
+        SuperMock.mockarRespostaBackend("login", Api.login_SUCESSO_3_4);
+        SuperMock.mockarRespostaBackend("acessos", Api.acessos_SUCESSO_5_6);
 
         ctrl.testarExecucaoBackend();
 
@@ -44,17 +44,17 @@ describe("teste", function() {
 
         expect(ctrl.retornosBackend).toEqual(
             [
-                { "execucao": 1, "data": { "data": [1, 2] } },
-                { "execucao": 1, "data": { "data": [1, 2] } },
-                { "execucao": 1, "data": { "data": [3, 4] } },
-                { "execucao": 1, "data": { "data": [3, 4] } },
-                { "execucao": 1, "data": { "data": [1, 2] } },
-                { "execucao": 1, "data": { "data": [1, 2] } },
-                { "execucao": 1, "data": { "data": [1, 2] } },
-                { "execucao": 1, "data": { "data": [1, 2] } },
-                { "execucao": 1, "data": { "data": [3, 4] } },
-                { "execucao": 1, "data": { "data": [3, 4] } },
-                { "execucao": 1, "data": { "data": [5, 6] } }
+                Api.contas_SUCESSO_1_2,
+                Api.contas_SUCESSO_1_2,
+                Api.login_SUCESSO_3_4,
+                Api.login_SUCESSO_3_4,
+                Api.contas_SUCESSO_1_2,
+                Api.contas_SUCESSO_1_2,
+                Api.contas_SUCESSO_1_2,
+                Api.contas_SUCESSO_1_2,
+                Api.login_SUCESSO_3_4,
+                Api.login_SUCESSO_3_4,
+                Api.acessos_SUCESSO_5_6
             ]
         );
 
@@ -69,9 +69,9 @@ describe("teste", function() {
         // Obs 1: chamando o método várias vezes para uma mesma transação 
         // fará com que as respostas consecutivas sejam acumuladas para serem chamadas 
         // na sequência de execução
-        SuperMock.mockarRespostaBackend("contas", undefined, { execucao: 2, data: { messages: ["Teste erro 1"] } });
-        SuperMock.mockarRespostaBackend("login", undefined, { execucao: 2, data: { messages: ["Teste erro 2"] } });
-        SuperMock.mockarRespostaBackend("acessos", undefined, { execucao: 2, data: { messages: ["Teste erro 3"] } });
+        SuperMock.mockarRespostaBackend("contas", undefined, Api.contas_TESTE_ERRO_1);
+        SuperMock.mockarRespostaBackend("login", undefined, Api.login_TESTE_ERRO_2);
+        SuperMock.mockarRespostaBackend("acessos", undefined, Api.acessos_TESTE_ERRO_3);
 
         ctrl.testarExecucaoBackend();
 
@@ -80,12 +80,12 @@ describe("teste", function() {
 
         expect(ctrl.retornosBackend).toEqual(
             [
-                { "execucao": 2, "data": { "messages": ["Teste erro 1"] } },
+                Api.contas_TESTE_ERRO_1,
                 undefined,
-                { "execucao": 2, "data": { "messages": ["Teste erro 1"] } },
-                { "execucao": 2, "data": { "messages": ["Teste erro 2"] } },
-                { "execucao": 2, "data": { "messages": ["Teste erro 2"] } },
-                { "execucao": 2, "data": { "messages": ["Teste erro 3"] } }
+                Api.contas_TESTE_ERRO_1,
+                Api.login_TESTE_ERRO_2,
+                Api.login_TESTE_ERRO_2,
+                Api.acessos_TESTE_ERRO_3
             ]
         );
 
@@ -94,17 +94,17 @@ describe("teste", function() {
     it("teste de execução com sucessos consecutivos diferentes e erro após um certo número de chamadas", inject(function() {
 
         // primeira, segunda e terceira com responses de sucessos diferentes, quarta em diante dará erro
-        SuperMock.mockarRespostaBackend("contas", { execucao: 3, data: { data: [1, 2] } });
-        SuperMock.mockarRespostaBackend("contas", { execucao: 3, data: { data: [2, 1] } });
-        SuperMock.mockarRespostaBackend("contas", { execucao: 3, data: { data: [3, 4] } });
-        SuperMock.mockarRespostaBackend("contas", undefined, { execucao: 3, data: { messages: ["Teste erro 1"] } });
+        SuperMock.mockarRespostaBackend("contas", Api.contas_SUCESSO_1_2);
+        SuperMock.mockarRespostaBackend("contas", Api.contas_SUCESSO_2_1);
+        SuperMock.mockarRespostaBackend("contas", Api.contas_SUCESSO_3_4);
+        SuperMock.mockarRespostaBackend("contas", undefined, Api.contas_TESTE_ERRO_1);
 
         // primeira com um response de sucesso, segunda em diante com erro
-        SuperMock.mockarRespostaBackend("login", { execucao: 3, data: { data: [3, 4] } });
-        SuperMock.mockarRespostaBackend("login", undefined, { execucao: 3, data: { messages: ["Teste erro 2"] } });
+        SuperMock.mockarRespostaBackend("login", Api.login_SUCESSO_3_4);
+        SuperMock.mockarRespostaBackend("login", undefined, Api.login_TESTE_ERRO_2);
 
         // sempre dará erro
-        SuperMock.mockarRespostaBackend("acessos", undefined, { execucao: 3, data: { messages: ["Teste erro 3"] } });
+        SuperMock.mockarRespostaBackend("acessos", undefined, Api.acessos_TESTE_ERRO_3);
 
         ctrl.testarExecucaoBackend();
 
@@ -113,16 +113,16 @@ describe("teste", function() {
 
         expect(ctrl.retornosBackend).toEqual(
             [
-                { "execucao": 3, "data": { "data": [1, 2] } },
-                { "execucao": 3, "data": { "data": [2, 1] } },
-                { "execucao": 3, "data": { "data": [3, 4] } },
-                { "execucao": 3, "data": { "messages": ["Teste erro 2"] } },
+                Api.contas_SUCESSO_1_2,
+                Api.contas_SUCESSO_2_1,
+                Api.login_SUCESSO_3_4,
+                Api.login_TESTE_ERRO_2,
                 undefined,
-                { "execucao": 3, "data": { "data": [3, 4] } },
-                { "execucao": 3, "data": { "messages": ["Teste erro 1"] } },
-                { "execucao": 3, "data": { "messages": ["Teste erro 2"] } },
-                { "execucao": 3, "data": { "messages": ["Teste erro 2"] } },
-                { "execucao": 3, "data": { "messages": ["Teste erro 3"] } }
+                Api.contas_SUCESSO_3_4,
+                Api.contas_TESTE_ERRO_1,
+                Api.login_TESTE_ERRO_2,
+                Api.login_TESTE_ERRO_2,
+                Api.acessos_TESTE_ERRO_3
             ]
         );
 
@@ -136,16 +136,16 @@ describe("teste", function() {
         // o terceiro é o response de sucesso
         // o quarto é o response de erro
         // chamada com um request específico dá uma resposta e com qualquer outro, outra resposta
-        SuperMock.mockarRespostaBackend("contas", { "teste": 1 }, { execucao: 4, data: { data: [1, 1] } }, undefined);
-        SuperMock.mockarRespostaBackend("contas", { execucao: 4, data: { data: [1, 2] } }, undefined);
-        SuperMock.mockarRespostaBackend("contas", { execucao: 4, data: { data: [2, 1] } }, undefined);
+        SuperMock.mockarRespostaBackend("contas", { "teste": 1 }, Api.contas_SUCESSO_1_1, undefined);
+        SuperMock.mockarRespostaBackend("contas", Api.contas_SUCESSO_1_2, undefined);
+        SuperMock.mockarRespostaBackend("contas", Api.contas_SUCESSO_2_1, undefined);
 
         // primeira com um response de sucesso, segunda com erro, terceira e quarta com response de sucessos diferentes
         // da quarta em diante, com o mesmo response de sucesso da quarta chamada
-        SuperMock.mockarRespostaBackend("login", { execucao: 4, data: { data: [9, 1] } });
+        SuperMock.mockarRespostaBackend("login", Api.login_SUCESSO_9_1);
 
         // sempre dará erro
-        SuperMock.mockarRespostaBackend("acessos", undefined, { execucao: 4, data: { messages: ["Teste erro 3"] } });
+        SuperMock.mockarRespostaBackend("acessos", undefined, Api.acessos_TESTE_ERRO_3);
 
         ctrl.testarExecucaoBackend();
         console.log(JSON.stringify(ctrl.retornosBackend));
@@ -155,17 +155,17 @@ describe("teste", function() {
 
         expect(ctrl.retornosBackend).toEqual(
             [
-                { "execucao": 4, "data": { "data": [1, 1] } },
-                { "execucao": 4, "data": { "data": [1, 2] } },
-                { "execucao": 4, "data": { "data": [9, 1] } },
-                { "execucao": 4, "data": { "data": [9, 1] } },
-                { "execucao": 4, "data": { "data": [2, 1] } },
-                { "execucao": 4, "data": { "data": [2, 1] } },
-                { "execucao": 4, "data": { "data": [2, 1] } },
-                { "execucao": 4, "data": { "data": [2, 1] } },
-                { "execucao": 4, "data": { "data": [9, 1] } },
-                { "execucao": 4, "data": { "data": [9, 1] } },
-                { "execucao": 4, "data": { "messages": ["Teste erro 3"] } }
+                Api.contas_SUCESSO_1_1,
+                Api.contas_SUCESSO_1_2,
+                Api.login_SUCESSO_9_1,
+                Api.login_SUCESSO_9_1,
+                Api.contas_SUCESSO_2_1,
+                Api.contas_SUCESSO_2_1,
+                Api.contas_SUCESSO_2_1,
+                Api.contas_SUCESSO_2_1,
+                Api.login_SUCESSO_9_1,
+                Api.login_SUCESSO_9_1,
+                Api.acessos_TESTE_ERRO_3
             ]
         );
 
@@ -174,22 +174,22 @@ describe("teste", function() {
     it("teste de execução com sucessos consecutivos diferentes e erro após um certo número de chamadas", inject(function() {
 
         // todas as respostas até a sexta chamada serão com sucessos diferentes, após a sexta chamadas, todos response e sucesso iguais
-        SuperMock.mockarRespostaBackend("contas", { execucao: 4, data: { data: [1, 1] } });
-        SuperMock.mockarRespostaBackend("contas", { execucao: 4, data: { data: [2, 1] } });
-        SuperMock.mockarRespostaBackend("contas", { execucao: 4, data: { data: [3, 1] } });
-        SuperMock.mockarRespostaBackend("contas", { execucao: 4, data: { data: [4, 1] } });
-        SuperMock.mockarRespostaBackend("contas", { execucao: 4, data: { data: [5, 1] } });
-        SuperMock.mockarRespostaBackend("contas", { execucao: 4, data: { data: [6, 1] } });
+        SuperMock.mockarRespostaBackend("contas", Api.contas_SUCESSO_1_1);
+        SuperMock.mockarRespostaBackend("contas", Api.contas_SUCESSO_2_1);
+        SuperMock.mockarRespostaBackend("contas", Api.contas_SUCESSO_3_1);
+        SuperMock.mockarRespostaBackend("contas", Api.contas_SUCESSO_4_1);
+        SuperMock.mockarRespostaBackend("contas", Api.contas_SUCESSO_5_1);
+        SuperMock.mockarRespostaBackend("contas", Api.contas_SUCESSO_6_1);
 
         // primeira com um response de sucesso, segunda com erro, terceira e quarta com response de sucessos diferentes
         // da quarta em diante, com o mesmo response de sucesso da quarta chamada
-        SuperMock.mockarRespostaBackend("login", { execucao: 4, data: { data: [9, 1] } });
-        SuperMock.mockarRespostaBackend("login", { execucao: 4, data: { data: [10, 1] } }, { execucao: 4, data: { messages: ["Teste erro 2"] } });
-        SuperMock.mockarRespostaBackend("login", { execucao: 4, data: { data: [11, 1] } });
-        SuperMock.mockarRespostaBackend("login", { execucao: 4, data: { data: [12, 1] } });
+        SuperMock.mockarRespostaBackend("login", Api.login_SUCESSO_9_1);
+        SuperMock.mockarRespostaBackend("login", Api.login_SUCESSO_10_1, Api.login_TESTE_ERRO_2);
+        SuperMock.mockarRespostaBackend("login", Api.login_SUCESSO_11_1);
+        SuperMock.mockarRespostaBackend("login", Api.login_SUCESSO_12_1);
 
         // sempre dará erro
-        SuperMock.mockarRespostaBackend("acessos", undefined, { execucao: 4, data: { messages: ["Teste erro 3"] } });
+        SuperMock.mockarRespostaBackend("acessos", undefined, Api.acessos_TESTE_ERRO_3);
 
         ctrl.testarExecucaoBackend();
         console.log(JSON.stringify(ctrl.retornosBackend));
@@ -199,15 +199,15 @@ describe("teste", function() {
 
         expect(ctrl.retornosBackend).toEqual(
             [
-                { "execucao": 4, "data": { "data": [1, 1] } },
-                { "execucao": 4, "data": { "data": [2, 1] } },
-                { "execucao": 4, "data": { "data": [9, 1] } },
-                { "execucao": 4, "data": { "messages": ["Teste erro 2"] } },
+                Api.contas_SUCESSO_1_1,
+                Api.contas_SUCESSO_2_1,
+                Api.login_SUCESSO_9_1,
+                Api.login_TESTE_ERRO_2,
                 undefined,
-                { "execucao": 4, "data": { "data": [3, 1] } },
-                { "execucao": 4, "data": { "data": [11, 1] } },
-                { "execucao": 4, "data": { "data": [12, 1] } },
-                { "execucao": 4, "data": { "messages": ["Teste erro 3"] } }
+                Api.contas_SUCESSO_3_1,
+                Api.login_SUCESSO_11_1,
+                Api.login_SUCESSO_12_1,
+                Api.acessos_TESTE_ERRO_3
             ]
         );
 

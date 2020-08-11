@@ -1,4 +1,7 @@
 (function() {
+
+    'use strict';
+
     var aplicacao = angular.module("controller-exemplos", []);
 
     aplicacao.controller("controllerExemplo", controllerExemplo);

@@ -1,9 +1,10 @@
-'use strict';
-
 var SuperMock;
 var Promise;
 
 (function() {
+
+    'use strict';
+
     SuperMock = {
         mockarBackend: _mockarBackend,
         mockarRespostaBackend: _mockarRespostaBackend,
@@ -26,9 +27,9 @@ var Promise;
     }
 
     function _mockarRespostaBackend(prop, p1, p2, p3) {
-        var request = undefined;
-        var responseSucesso = undefined;
-        var responseErro = undefined;
+        var request;
+        var responseSucesso;
+        var responseErro;
         if (arguments.length <= 1) {
             throw Error("Informe no mínimo o nome do backend e a resposta de sucesso");
         } else if (arguments.length == 2) {
@@ -86,7 +87,7 @@ var Promise;
             return _MOCKS[prop][key];
         } else {
             // obs: "undefined" é a chave de pesquisa do mock default
-            return _MOCKS[prop]["undefined"];
+            return _MOCKS[prop].undefined;
         }
     }
 
@@ -176,24 +177,26 @@ var Promise;
             scope = $rootScopeProvider.$get().$new();
         });
         for (var property in scope) {
-            (function(p) {
-                var oldPropertyValue = scope[p];
-                Object.defineProperty(scope, p, {
-                    get: function() {
-                        if (!getControllerFunction()) {
-                            throw Error("Você deve acessar o $scope." + p + " a partir de uma function do controller que está associada ao ng-init do html ao invés de fazer este acesso durante a construção do controller (para o controller ser testável)");
-                        }
-                        return oldPropertyValue;
-                    },
-                    set: function(valor) {
-                        oldPropertyValue = valor;
-                    }
-                });
-            })(property);
+            _wrapProperty(scope, property, getControllerFunction);
         }
         return function() {
             return scope;
         };
+    }
+
+    function _wrapProperty(scope, property, getControllerFunction) {
+        var oldPropertyValue = scope[property];
+        Object.defineProperty(scope, property, {
+            get: function() {
+                if (!getControllerFunction()) {
+                    throw Error("Você deve acessar o $scope." + property + " a partir de uma function do controller que está associada ao ng-init do html ao invés de fazer este acesso durante a construção do controller (para o controller ser testável)");
+                }
+                return oldPropertyValue;
+            },
+            set: function(valor) {
+                oldPropertyValue = valor;
+            }
+        });
     }
 
 })();

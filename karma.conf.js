@@ -16,8 +16,10 @@ module.exports = function(config) {
             'node_modules/angular/angular.js',
             'node_modules/angular-route/angular-route.js',
             'node_modules/angular-mocks/angular-mocks.js',
-            'spec/SuperMock.js',
             'src/**/*.js',
+            'spec/mocks-modules/**/*.js',
+            'spec/mocks-api/**/*.js',
+            'spec/mocks/**/*.js',
             'spec/**/*.spec.js'
         ],
 
