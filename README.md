@@ -85,15 +85,15 @@ Clone o projeto e execute os seguintes comandos no terminal, na pasta do projeto
         }));
 
 **5. SuperMock.lerJson(caminhoJson)**
-
+        
         Lê o conteúdo de um arquivo json e retorna o objeto. O diretório padrão para busca de arquivos json é spec/mocks-api. Para alterar este diretório, execute a função SuperMock.diretorioJson().
 
-*Exeplo de uso:*
+*Exemplo de uso:*
 
         SuperMock.lerJson("cliente/responseSucesso.json")
 
 **6. SuperMock.diretorioJson(diretorioJson)**
-
+        
         Altera o diretório padrão de leitura de arquivos json. O diretório padrão é spec/mocks-api.
 
 *Exemplo de uso:*
