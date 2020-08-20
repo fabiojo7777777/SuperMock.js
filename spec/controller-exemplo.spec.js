@@ -13,6 +13,8 @@ describe("teste", function() {
         $provide.factory("BackendService", SuperMock.mockarBackend());
         // mock do $scope
         $provide.factory("$scope", SuperMock.mockar$Scope(function() { return ctrl; }));
+        // diretório para buscar arquivos .json. O diretório padrão é "spec/mocks-api"
+        // SuperMock.diretorioJson("spec/mocks-api");
     }));
 
     // criar controller
@@ -33,9 +35,9 @@ describe("teste", function() {
         // Obs 1: chamando o método várias vezes para uma mesma transação 
         // fará com que as respostas consecutivas sejam acumuladas para serem chamadas 
         // na sequência de execução
-        SuperMock.mockarRespostaBackend("contas", Api.contas_SUCESSO_1_2);
-        SuperMock.mockarRespostaBackend("login", Api.login_SUCESSO_3_4);
-        SuperMock.mockarRespostaBackend("acessos", Api.acessos_SUCESSO_5_6);
+        SuperMock.mockarRespostaBackend("contas", "contas/SUCESSO_1_2.json");
+        SuperMock.mockarRespostaBackend("login", "login/SUCESSO_3_4.json");
+        SuperMock.mockarRespostaBackend("acessos", "acessos/SUCESSO_5_6.json");
 
         ctrl.testarExecucaoBackend();
 
@@ -44,17 +46,17 @@ describe("teste", function() {
 
         expect(ctrl.retornosBackend).toEqual(
             [
-                Api.contas_SUCESSO_1_2,
-                Api.contas_SUCESSO_1_2,
-                Api.login_SUCESSO_3_4,
-                Api.login_SUCESSO_3_4,
-                Api.contas_SUCESSO_1_2,
-                Api.contas_SUCESSO_1_2,
-                Api.contas_SUCESSO_1_2,
-                Api.contas_SUCESSO_1_2,
-                Api.login_SUCESSO_3_4,
-                Api.login_SUCESSO_3_4,
-                Api.acessos_SUCESSO_5_6
+                SuperMock.lerJson("contas/SUCESSO_1_2.json"),
+                SuperMock.lerJson("contas/SUCESSO_1_2.json"),
+                SuperMock.lerJson("login/SUCESSO_3_4.json"),
+                SuperMock.lerJson("login/SUCESSO_3_4.json"),
+                SuperMock.lerJson("contas/SUCESSO_1_2.json"),
+                SuperMock.lerJson("contas/SUCESSO_1_2.json"),
+                SuperMock.lerJson("contas/SUCESSO_1_2.json"),
+                SuperMock.lerJson("contas/SUCESSO_1_2.json"),
+                SuperMock.lerJson("login/SUCESSO_3_4.json"),
+                SuperMock.lerJson("login/SUCESSO_3_4.json"),
+                SuperMock.lerJson("acessos/SUCESSO_5_6.json")
             ]
         );
 
@@ -69,9 +71,9 @@ describe("teste", function() {
         // Obs 1: chamando o método várias vezes para uma mesma transação 
         // fará com que as respostas consecutivas sejam acumuladas para serem chamadas 
         // na sequência de execução
-        SuperMock.mockarRespostaBackend("contas", undefined, Api.contas_TESTE_ERRO_1);
-        SuperMock.mockarRespostaBackend("login", undefined, Api.login_TESTE_ERRO_2);
-        SuperMock.mockarRespostaBackend("acessos", undefined, Api.acessos_TESTE_ERRO_3);
+        SuperMock.mockarRespostaBackend("contas", undefined, "contas/TESTE_ERRO_1.json");
+        SuperMock.mockarRespostaBackend("login", undefined, "login/TESTE_ERRO_2.json");
+        SuperMock.mockarRespostaBackend("acessos", undefined, "acessos/TESTE_ERRO_3.json");
 
         ctrl.testarExecucaoBackend();
 
@@ -80,12 +82,12 @@ describe("teste", function() {
 
         expect(ctrl.retornosBackend).toEqual(
             [
-                Api.contas_TESTE_ERRO_1,
+                SuperMock.lerJson("contas/TESTE_ERRO_1.json"),
                 undefined,
-                Api.contas_TESTE_ERRO_1,
-                Api.login_TESTE_ERRO_2,
-                Api.login_TESTE_ERRO_2,
-                Api.acessos_TESTE_ERRO_3
+                SuperMock.lerJson("contas/TESTE_ERRO_1.json"),
+                SuperMock.lerJson("login/TESTE_ERRO_2.json"),
+                SuperMock.lerJson("login/TESTE_ERRO_2.json"),
+                SuperMock.lerJson("acessos/TESTE_ERRO_3.json")
             ]
         );
 
@@ -94,17 +96,17 @@ describe("teste", function() {
     it("teste de execução com sucessos consecutivos diferentes e erro após um certo número de chamadas", inject(function() {
 
         // primeira, segunda e terceira com responses de sucessos diferentes, quarta em diante dará erro
-        SuperMock.mockarRespostaBackend("contas", Api.contas_SUCESSO_1_2);
-        SuperMock.mockarRespostaBackend("contas", Api.contas_SUCESSO_2_1);
-        SuperMock.mockarRespostaBackend("contas", Api.contas_SUCESSO_3_4);
-        SuperMock.mockarRespostaBackend("contas", undefined, Api.contas_TESTE_ERRO_1);
+        SuperMock.mockarRespostaBackend("contas", "contas/SUCESSO_1_2.json");
+        SuperMock.mockarRespostaBackend("contas", "contas/SUCESSO_2_1.json");
+        SuperMock.mockarRespostaBackend("contas", "contas/SUCESSO_3_4.json");
+        SuperMock.mockarRespostaBackend("contas", undefined, "contas/TESTE_ERRO_1.json");
 
         // primeira com um response de sucesso, segunda em diante com erro
-        SuperMock.mockarRespostaBackend("login", Api.login_SUCESSO_3_4);
-        SuperMock.mockarRespostaBackend("login", undefined, Api.login_TESTE_ERRO_2);
+        SuperMock.mockarRespostaBackend("login", "login/SUCESSO_3_4.json");
+        SuperMock.mockarRespostaBackend("login", undefined, "login/TESTE_ERRO_2.json");
 
         // sempre dará erro
-        SuperMock.mockarRespostaBackend("acessos", undefined, Api.acessos_TESTE_ERRO_3);
+        SuperMock.mockarRespostaBackend("acessos", undefined, "acessos/TESTE_ERRO_3.json");
 
         ctrl.testarExecucaoBackend();
 
@@ -113,16 +115,16 @@ describe("teste", function() {
 
         expect(ctrl.retornosBackend).toEqual(
             [
-                Api.contas_SUCESSO_1_2,
-                Api.contas_SUCESSO_2_1,
-                Api.login_SUCESSO_3_4,
-                Api.login_TESTE_ERRO_2,
+                SuperMock.lerJson("contas/SUCESSO_1_2.json"),
+                SuperMock.lerJson("contas/SUCESSO_2_1.json"),
+                SuperMock.lerJson("login/SUCESSO_3_4.json"),
+                SuperMock.lerJson("login/TESTE_ERRO_2.json"),
                 undefined,
-                Api.contas_SUCESSO_3_4,
-                Api.contas_TESTE_ERRO_1,
-                Api.login_TESTE_ERRO_2,
-                Api.login_TESTE_ERRO_2,
-                Api.acessos_TESTE_ERRO_3
+                SuperMock.lerJson("contas/SUCESSO_3_4.json"),
+                SuperMock.lerJson("contas/TESTE_ERRO_1.json"),
+                SuperMock.lerJson("login/TESTE_ERRO_2.json"),
+                SuperMock.lerJson("login/TESTE_ERRO_2.json"),
+                SuperMock.lerJson("acessos/TESTE_ERRO_3.json")
             ]
         );
 
@@ -136,16 +138,16 @@ describe("teste", function() {
         // o terceiro é o response de sucesso
         // o quarto é o response de erro
         // chamada com um request específico dá uma resposta e com qualquer outro, outra resposta
-        SuperMock.mockarRespostaBackend("contas", { "teste": 1 }, Api.contas_SUCESSO_1_1, undefined);
-        SuperMock.mockarRespostaBackend("contas", Api.contas_SUCESSO_1_2, undefined);
-        SuperMock.mockarRespostaBackend("contas", Api.contas_SUCESSO_2_1, undefined);
+        SuperMock.mockarRespostaBackend("contas", { "teste": 1 }, "contas/SUCESSO_1_1.json", undefined);
+        SuperMock.mockarRespostaBackend("contas", "contas/SUCESSO_1_2.json", undefined);
+        SuperMock.mockarRespostaBackend("contas", "contas/SUCESSO_2_1.json", undefined);
 
         // primeira com um response de sucesso, segunda com erro, terceira e quarta com response de sucessos diferentes
         // da quarta em diante, com o mesmo response de sucesso da quarta chamada
-        SuperMock.mockarRespostaBackend("login", Api.login_SUCESSO_9_1);
+        SuperMock.mockarRespostaBackend("login", "login/SUCESSO_9_1.json");
 
         // sempre dará erro
-        SuperMock.mockarRespostaBackend("acessos", undefined, Api.acessos_TESTE_ERRO_3);
+        SuperMock.mockarRespostaBackend("acessos", undefined, "acessos/TESTE_ERRO_3.json");
 
         ctrl.testarExecucaoBackend();
         console.log(JSON.stringify(ctrl.retornosBackend));
@@ -155,17 +157,17 @@ describe("teste", function() {
 
         expect(ctrl.retornosBackend).toEqual(
             [
-                Api.contas_SUCESSO_1_1,
-                Api.contas_SUCESSO_1_2,
-                Api.login_SUCESSO_9_1,
-                Api.login_SUCESSO_9_1,
-                Api.contas_SUCESSO_2_1,
-                Api.contas_SUCESSO_2_1,
-                Api.contas_SUCESSO_2_1,
-                Api.contas_SUCESSO_2_1,
-                Api.login_SUCESSO_9_1,
-                Api.login_SUCESSO_9_1,
-                Api.acessos_TESTE_ERRO_3
+                SuperMock.lerJson("contas/SUCESSO_1_1.json"),
+                SuperMock.lerJson("contas/SUCESSO_1_2.json"),
+                SuperMock.lerJson("login/SUCESSO_9_1.json"),
+                SuperMock.lerJson("login/SUCESSO_9_1.json"),
+                SuperMock.lerJson("contas/SUCESSO_2_1.json"),
+                SuperMock.lerJson("contas/SUCESSO_2_1.json"),
+                SuperMock.lerJson("contas/SUCESSO_2_1.json"),
+                SuperMock.lerJson("contas/SUCESSO_2_1.json"),
+                SuperMock.lerJson("login/SUCESSO_9_1.json"),
+                SuperMock.lerJson("login/SUCESSO_9_1.json"),
+                SuperMock.lerJson("acessos/TESTE_ERRO_3.json")
             ]
         );
 
@@ -174,22 +176,22 @@ describe("teste", function() {
     it("teste de execução com sucessos consecutivos diferentes e erro após um certo número de chamadas", inject(function() {
 
         // todas as respostas até a sexta chamada serão com sucessos diferentes, após a sexta chamadas, todos response e sucesso iguais
-        SuperMock.mockarRespostaBackend("contas", Api.contas_SUCESSO_1_1);
-        SuperMock.mockarRespostaBackend("contas", Api.contas_SUCESSO_2_1);
-        SuperMock.mockarRespostaBackend("contas", Api.contas_SUCESSO_3_1);
-        SuperMock.mockarRespostaBackend("contas", Api.contas_SUCESSO_4_1);
-        SuperMock.mockarRespostaBackend("contas", Api.contas_SUCESSO_5_1);
-        SuperMock.mockarRespostaBackend("contas", Api.contas_SUCESSO_6_1);
+        SuperMock.mockarRespostaBackend("contas", "contas/SUCESSO_1_1.json");
+        SuperMock.mockarRespostaBackend("contas", "contas/SUCESSO_2_1.json");
+        SuperMock.mockarRespostaBackend("contas", "contas/SUCESSO_3_1.json");
+        SuperMock.mockarRespostaBackend("contas", "contas/SUCESSO_4_1.json");
+        SuperMock.mockarRespostaBackend("contas", "contas/SUCESSO_5_1.json");
+        SuperMock.mockarRespostaBackend("contas", "contas/SUCESSO_6_1.json");
 
         // primeira com um response de sucesso, segunda com erro, terceira e quarta com response de sucessos diferentes
         // da quarta em diante, com o mesmo response de sucesso da quarta chamada
-        SuperMock.mockarRespostaBackend("login", Api.login_SUCESSO_9_1);
-        SuperMock.mockarRespostaBackend("login", Api.login_SUCESSO_10_1, Api.login_TESTE_ERRO_2);
-        SuperMock.mockarRespostaBackend("login", Api.login_SUCESSO_11_1);
-        SuperMock.mockarRespostaBackend("login", Api.login_SUCESSO_12_1);
+        SuperMock.mockarRespostaBackend("login", "login/SUCESSO_9_1.json");
+        SuperMock.mockarRespostaBackend("login", "login/SUCESSO_10_1.json", "login/TESTE_ERRO_2.json");
+        SuperMock.mockarRespostaBackend("login", "login/SUCESSO_11_1.json");
+        SuperMock.mockarRespostaBackend("login", "login/SUCESSO_12_1.json");
 
         // sempre dará erro
-        SuperMock.mockarRespostaBackend("acessos", undefined, Api.acessos_TESTE_ERRO_3);
+        SuperMock.mockarRespostaBackend("acessos", undefined, "acessos/TESTE_ERRO_3.json");
 
         ctrl.testarExecucaoBackend();
         console.log(JSON.stringify(ctrl.retornosBackend));
@@ -199,15 +201,15 @@ describe("teste", function() {
 
         expect(ctrl.retornosBackend).toEqual(
             [
-                Api.contas_SUCESSO_1_1,
-                Api.contas_SUCESSO_2_1,
-                Api.login_SUCESSO_9_1,
-                Api.login_TESTE_ERRO_2,
+                SuperMock.lerJson("contas/SUCESSO_1_1.json"),
+                SuperMock.lerJson("contas/SUCESSO_2_1.json"),
+                SuperMock.lerJson("login/SUCESSO_9_1.json"),
+                SuperMock.lerJson("login/TESTE_ERRO_2.json"),
                 undefined,
-                Api.contas_SUCESSO_3_1,
-                Api.login_SUCESSO_11_1,
-                Api.login_SUCESSO_12_1,
-                Api.acessos_TESTE_ERRO_3
+                SuperMock.lerJson("contas/SUCESSO_3_1.json"),
+                SuperMock.lerJson("login/SUCESSO_11_1.json"),
+                SuperMock.lerJson("login/SUCESSO_12_1.json"),
+                SuperMock.lerJson("acessos/TESTE_ERRO_3.json")
             ]
         );
 

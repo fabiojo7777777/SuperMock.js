@@ -34,14 +34,19 @@ Clone o projeto e execute os seguintes comandos no terminal, na pasta do projeto
         Inclui uma resposta de erro ou sucesso para execução posterior durante a execução do teste unitário
         
         primeiro parâmetro: nome do serviço backend a ser mockado
-        segundo parâmetro: response de sucesso ao executar o serviço do backend mockado
-        terceiro parâmetro: response de erro ao executar o serviço do backend mockado
+        segundo parâmetro: response de sucesso ao executar o serviço do backend mockado ou texto com o caminho do arquivo json que contem a resposta de sucesso
+        terceiro parâmetro: response de erro ao executar o serviço do backend mockado ou texto com o caminho do arquivo json que contem a resposta de erro
 
 *Exemplo de uso:*
 
         // primeira com um response de sucesso, segunda em diante com erro
         SuperMock.mockarRespostaBackend("login", { execucao: 3, data: { data: [3, 4] } });
         SuperMock.mockarRespostaBackend("login", undefined, { execucao: 3, data: { messages: ["Teste erro 2"] } });
+
+        // primeira com um response de sucesso, segunda em diante com erro
+        // Obs: os arquivos são lidos do diretório padrão spec/mocks-api
+        SuperMock.mockarRespostaBackend("login", "contas/sucesso.json");
+        SuperMock.mockarRespostaBackend("login", undefined, "contas/erro.json");
 
         // primeira chamada com um response de sucesso, caso o request seja {"teste": 1} . Atenção: informar os 4 parâmetros para obter este comportamento
         // caso request não encontrado, usa a chamada com erro
@@ -78,3 +83,19 @@ Clone o projeto e execute os seguintes comandos no terminal, na pasta do projeto
                 //
                 expect(promise).toBeResolved();
         }));
+
+**5. SuperMock.lerJson(caminhoJson)**
+
+        Lê o conteúdo de um arquivo json e retorna o objeto. O diretório padrão para busca de arquivos json é spec/mocks-api. Para alterar este diretório, execute a função SuperMock.diretorioJson().
+
+*Exeplo de uso:*
+
+        SuperMock.lerJson("cliente/responseSucesso.json")
+
+**6. SuperMock.diretorioJson(diretorioJson)**
+
+        Altera o diretório padrão de leitura de arquivos json. O diretório padrão é spec/mocks-api.
+
+*Exemplo de uso:*
+
+        SuperMock.diretorioJson("spec/mocks-api")
