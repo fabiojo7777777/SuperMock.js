@@ -11,6 +11,8 @@ Clone o projeto e execute os seguintes comandos no terminal, na pasta do projeto
 # Instalação
 
 importe o script SuperMock.js antes dos specs no arquivo de configuração karma.conf.js e utilize as funcionalidades.
+acrescente dentro do arquivo karma.conf.js, na propriedade files a linha a seguir:
+{ pattern: 'spec/mocks-api/**/*.json', included: false },
         
 # Funcionalidades providas
 
