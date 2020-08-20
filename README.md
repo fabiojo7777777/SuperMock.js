@@ -35,11 +35,11 @@ Provê um factory angular que emula um backend.
 
 Inclui uma resposta de erro ou sucesso para execução posterior durante a execução do teste unitário
         
-primeiro parâmetro: nome do serviço backend a ser mockado
+**primeiro parâmetro**: nome do serviço backend a ser mockado
 
-segundo parâmetro: response de sucesso ao executar o serviço do backend mockado ou texto com o caminho do arquivo json que contem a resposta de sucesso
+**segundo parâmetro**: response de sucesso ao executar o serviço do backend mockado ou texto com o caminho do arquivo json que contem a resposta de sucesso
 
-terceiro parâmetro: response de erro ao executar o serviço do backend mockado ou texto com o caminho do arquivo json que contem a resposta de erro
+**terceiro parâmetro**: response de erro ao executar o serviço do backend mockado ou texto com o caminho do arquivo json que contem a resposta de erro
 
 
 *Exemplo de uso:*
