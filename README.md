@@ -10,17 +10,17 @@ Clone o projeto e execute os seguintes comandos no terminal, na pasta do projeto
 
 # Instalação
 
-        importe o script SuperMock.js antes dos specs no arquivo de configuração karma.conf.js e utilize as funcionalidades.
+importe o script SuperMock.js antes dos specs no arquivo de configuração karma.conf.js e utilize as funcionalidades.
         
 # Funcionalidades providas
 
 **SuperMock**
 
-        Variável global que provê as funcionalidades desta biblioteca
+Variável global que provê as funcionalidades desta biblioteca
 
 **1. SuperMock.mockarBackend()**
 
-        Provê um factory angular que emula um backend.
+Provê um factory angular que emula um backend.
 
 *Exemplo de uso:*
         
@@ -31,11 +31,11 @@ Clone o projeto e execute os seguintes comandos no terminal, na pasta do projeto
 
 **2. SuperMock.mockarRespostaBackend()**
 
-        Inclui uma resposta de erro ou sucesso para execução posterior durante a execução do teste unitário
+Inclui uma resposta de erro ou sucesso para execução posterior durante a execução do teste unitário
         
-        primeiro parâmetro: nome do serviço backend a ser mockado
-        segundo parâmetro: response de sucesso ao executar o serviço do backend mockado ou texto com o caminho do arquivo json que contem a resposta de sucesso
-        terceiro parâmetro: response de erro ao executar o serviço do backend mockado ou texto com o caminho do arquivo json que contem a resposta de erro
+primeiro parâmetro: nome do serviço backend a ser mockado
+segundo parâmetro: response de sucesso ao executar o serviço do backend mockado ou texto com o caminho do arquivo json que contem a resposta de sucesso
+terceiro parâmetro: response de erro ao executar o serviço do backend mockado ou texto com o caminho do arquivo json que contem a resposta de erro
 
 *Exemplo de uso:*
 
@@ -60,7 +60,7 @@ Clone o projeto e execute os seguintes comandos no terminal, na pasta do projeto
 
 **3. SuperMock.verificarNenhumProcessoAssincronoDoAngularPendenteDeExecucao()**
 
-        Verifica se não há nenhuma promise a ser executada após os testes unitários
+Verifica se não há nenhuma promise a ser executada após os testes unitários
         
 *Exemplo de uso:*
 
@@ -71,7 +71,7 @@ Clone o projeto e execute os seguintes comandos no terminal, na pasta do projeto
 
 **4. SuperMock.executarTodosProcessosAssincronosDoAngular()**
         
-        Executa todos os processos assíncronos do digest do angular (ex: $timeout, $q, promises)
+Executa todos os processos assíncronos do digest do angular (ex: $timeout, $q, promises)
         
 *Exemplo de uso:*
 
@@ -86,7 +86,7 @@ Clone o projeto e execute os seguintes comandos no terminal, na pasta do projeto
 
 **5. SuperMock.lerJson(caminhoJson)**
         
-        Lê o conteúdo de um arquivo json e retorna o objeto. O diretório padrão para busca de arquivos json é spec/mocks-api. Para alterar este diretório, execute a função SuperMock.diretorioJson().
+Lê o conteúdo de um arquivo json e retorna o objeto. O diretório padrão para busca de arquivos json é spec/mocks-api. Para alterar este diretório, execute a função SuperMock.diretorioJson().
 
 *Exemplo de uso:*
 
@@ -94,7 +94,7 @@ Clone o projeto e execute os seguintes comandos no terminal, na pasta do projeto
 
 **6. SuperMock.diretorioJson(diretorioJson)**
         
-        Altera o diretório padrão de leitura de arquivos json. O diretório padrão é spec/mocks-api.
+Altera o diretório padrão de leitura de arquivos json. O diretório padrão é spec/mocks-api.
 
 *Exemplo de uso:*
 
