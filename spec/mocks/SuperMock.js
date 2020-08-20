@@ -51,31 +51,35 @@ var Promise;
 
     function _mockarRespostaBackend2(prop, request, responseSucesso, responseErro) {
         var mock = _obterOuCriarNovoMock(prop, request);
-        if (typeof responseSucesso !== "undefined") {
+        if (typeof responseSucesso === "undefined") {
+            mock.responseSucesso.push(undefined);
+        } else if (typeof responseSucesso === "string") {
             try {
                 if (responseSucesso.indexOf(".json") === responseSucesso.length - 5) {
                     mock.responseSucesso.push(_lerJson(responseSucesso));
                 } else {
-                    mock.responseSucesso.push(responseSucesso);
+                    throw Error("*** O nome do arquivo json de sucesso deve terminar com a extensão .json. Arquivo informado: \"" + responseSucesso + "\" ***");
                 }
             } catch (e) {
-                mock.responseSucesso.push(responseSucesso);
+                throw Error("Json inválido dentro do arquivo \"" + responseSucesso + "\"");
             }
         } else {
-            mock.responseSucesso.push(undefined);
+            mock.responseSucesso.push(responseSucesso);
         }
-        if (typeof responseErro !== "undefined") {
+        if (typeof responseErro === "undefined") {
+            mock.responseErro.push(undefined);
+        } else if (typeof responseSucesso === "string") {
             try {
                 if (responseErro.indexOf(".json") === responseErro.length - 5) {
                     mock.responseErro.push(_lerJson(responseErro));
                 } else {
-                    mock.responseErro.push(responseErro);
+                    throw Error("*** O nome do arquivo json de sucesso deve terminar com a extensão .json. Arquivo informado: \"" + responseErro + "\" ***");
                 }
             } catch (e) {
-                mock.responseErro.push(responseErro);
+                throw Error("Json inválido dentro do arquivo \"" + responseErro + "\"");
             }
         } else {
-            mock.responseErro.push(undefined);
+            mock.responseErro.push(responseErro);
         }
         _mockarServico(prop);
     }
