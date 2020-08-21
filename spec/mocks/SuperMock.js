@@ -68,7 +68,7 @@ var Promise;
         }
         if (typeof responseErro === "undefined") {
             mock.responseErro.push(undefined);
-        } else if (typeof responseSucesso === "string") {
+        } else if (typeof responseErro === "string") {
             try {
                 if (responseErro.indexOf(".json") === responseErro.length - 5) {
                     mock.responseErro.push(_lerJson(responseErro));
