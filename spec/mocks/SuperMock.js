@@ -169,15 +169,20 @@ var Promise;
     }
 
     function executarTodosProcessosAssincronosDoAngular() {
-        inject(function($flushPendingTasks) {
+        inject(function($flushPendingTasks, $rootScope) {
             for (var i = 0; i < 1000; i++) {
                 try {
                     $flushPendingTasks();
                 } catch (e) {
                     //ignore
                     //console.log("flush de tarefas executado " + i + " vezes.");
-                    return;
+                    break;
                 }
+            }
+            try {
+                $rootScope.$digest();
+            } catch (e1) {
+                //ignore
             }
         });
     }
