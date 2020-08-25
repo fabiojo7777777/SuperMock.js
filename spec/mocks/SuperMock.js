@@ -35,7 +35,7 @@ var Promise;
         var responseSucesso;
         var responseErro;
         if (arguments.length <= 1) {
-            throw Error("Informe no mínimo o nome do backend e a resposta de sucesso");
+            throw Error("*** Informe no mínimo o nome do backend e a resposta de sucesso ***");
         } else if (arguments.length == 2) {
             responseSucesso = arguments[1];
         } else if (arguments.length == 3) {
@@ -61,7 +61,7 @@ var Promise;
                     throw Error("*** O nome do arquivo json de sucesso deve terminar com a extensão .json. Arquivo informado: \"" + responseSucesso + "\" ***");
                 }
             } catch (e) {
-                throw Error("Json inválido dentro do arquivo \"" + responseSucesso + "\"");
+                throw Error("*** Json inválido dentro do arquivo \"" + responseSucesso + "\" ***");
             }
         } else {
             mock.responseSucesso.push(responseSucesso);
@@ -76,7 +76,7 @@ var Promise;
                     throw Error("*** O nome do arquivo json de sucesso deve terminar com a extensão .json. Arquivo informado: \"" + responseErro + "\" ***");
                 }
             } catch (e) {
-                throw Error("Json inválido dentro do arquivo \"" + responseErro + "\"");
+                throw Error("*** Json inválido dentro do arquivo \"" + responseErro + "\" ***");
             }
         } else {
             mock.responseErro.push(responseErro);
@@ -143,11 +143,14 @@ var Promise;
 
                 var deferred = _obterDeferred();
 
-                if (responseErro) {
+                if (typeof responseErro !== "undefined") {
                     deferred.reject(responseErro);
-                } else {
+                } else if (typeof responseSucesso !== "undefined") {
                     deferred.resolve(responseSucesso);
                 }
+				else {
+					throw Error("*** A execução do backend \"" + prop + "\" com a entrada \"" + request + "\" não foi mockada ***");
+				}
 
                 return deferred.promise;
             };
@@ -199,7 +202,7 @@ var Promise;
 
     function _mockar$Scope(getControllerFunction) {
         if (typeof getControllerFunction !== "function") {
-            throw new Error("Chame a função SuperMock.mockar$Scope enviando uma função que retorne a variável que tem o controller a ser testado");
+            throw new Error("*** Chame a função SuperMock.mockar$Scope enviando uma função que retorne a variável que tem o controller a ser testado ***");
         }
         var scope;
         module(function($rootScopeProvider) {
@@ -218,7 +221,7 @@ var Promise;
         Object.defineProperty(scope, property, {
             get: function() {
                 if (!getControllerFunction()) {
-                    throw Error("Você deve acessar o $scope." + property + " a partir de uma function do controller que está associada ao ng-init do html ao invés de fazer este acesso durante a construção do controller (para o controller ser testável)");
+                    throw Error("*** Você deve acessar o $scope." + property + " a partir de uma function do controller que está associada ao ng-init do html ao invés de fazer este acesso durante a construção do controller (para o controller ser testável) ***");
                 }
                 return oldPropertyValue;
             },
@@ -258,15 +261,15 @@ var Promise;
                 try {
                     json = JSON.parse(xhr.responseText);
                 } catch (e1) {
-                    throw Error("Json inválido dentro do arquivo \"" + url + "\".Descrição: " + e1 + "\nJson informado: \"" + xhr.responseText + "\"");
+                    throw Error("*** Json inválido dentro do arquivo \"" + url + "\".Descrição: " + e1 + "\nJson informado: \"" + xhr.responseText + "\" ***");
                 }
             } else {
-                throw Error("Erro ao ler arquivo json \"" + url + "\". Descrição: \"" + xhr.statusText + "\"");
+                throw Error("*** Erro ao ler arquivo json \"" + url + "\". Descrição: \"" + xhr.statusText + "\" ***");
             }
         };
 
         xhr.onerror = function(e) {
-            throw Error("Erro ao ler arquivo json \"" + url + "\". Descrição: \"" + xhr.statusText + "\"");
+            throw Error("*** Erro ao ler arquivo json \"" + url + "\". Descrição: \"" + xhr.statusText + "\" ***");
         };
 
         xhr.send(null);
